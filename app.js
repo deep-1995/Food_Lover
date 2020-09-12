@@ -3,11 +3,8 @@ const app = express();
 const mongoose = require("mongoose");
 const PORT = process.env.PORT || 5000;
 const { MONGOURI } = require("./config/keys");
-const socketIo = require("socket.io");
-const http = require("http");
-const server = http.createServer(app);
-
-const io = socketIo(server);
+const http = require("http").createServer(app);
+const io = require("socket.io")(http);
 io.on("connection", (socket) => {
   console.log("conneted socket.io");
   socket.on("incoming Data", (data) => {
@@ -46,6 +43,6 @@ if (process.env.NODE_ENV == "production") {
   });
 }
 
-app.listen(PORT, () => {
+http.listen(PORT, () => {
   console.log("server is running on", PORT);
 });

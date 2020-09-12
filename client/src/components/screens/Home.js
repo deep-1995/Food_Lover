@@ -10,11 +10,12 @@ const Home = () => {
   let URL =
     process.env.NODE_ENV === "production"
       ? window.location.hostname
-      : "http://localhost:3001";
-  let socket = io.connect(URL, { secure: true });
+      : "http://localhost:5000";
+  let socket = socketIo.connect(URL, { secure: true });
   useEffect(() => {
-    socket.on("incoming data", (data) => {
-      setSocketData({ socketData: data });
+    socket.on("name", (data) => {
+      console.log(data);
+      setSockData({ sockData: data });
     });
   });
   const { state, dispatch } = useContext(UserContext);
@@ -101,6 +102,8 @@ const Home = () => {
       .then((res) => res.json())
       .then((result) => {
         console.log(result);
+        const socket = socketIo(sockData);
+        socket.emit("name", result);
         const newData = data.map((item) => {
           if (item._id == result._id) {
             return result;
@@ -212,6 +215,7 @@ const Home = () => {
           </div>
         );
       })}
+      <div>{sockData}</div>
     </div>
   );
 };
